@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Leef Pool</title>
+    <script src="https://code.jquery.com/jquery-3.6.3.min.js"></script>
+</head>
+<body>
+    Transaction ID:
+    <input type="text" id="trans_number" value="4f3d4c11c57b82235aa3d7c7516dc7a0f3e2ecd140d66b2b1af70739320ffb92"> <br>
+    <button id="fetch">Fetch</button> <br>
+    <pre id="result"></pre>
+    <script>
+        function renderActions(acts) {
+          let e_res = $("#result");
+          let regex = /^X: (?<x>\d+) \| Y: (?<y>\d+) \| LEEF in Tree:(?<pool>[\d\.]+)/;
+          for (let a of acts) {
+            let m = regex.exec(a.act.data.memo);
+            if (m === null) continue;
+            let pool = parseInt(m.groups.pool);
+            let f_pool = pool.toLocaleString().padStart(12, ' ');
+            e_res.append(`${m.groups.x}:${m.groups.y} # ${f_pool} LEEF\n`)
+          }
+        }
+        $("#fetch").on('click', function () {
+          let url = "https://wax.eosrio.io/v2/history/get_transaction";
+          $.ajax({
+            url: url,
+            type: "GET",
+            data: {
+              id: $("#trans_number").val()
+            },
+            success: function (r) {
+              if (r.actions === undefined) {
+                alert("Gagal fetch");
+                return;
+              }
+              renderActions(r.actions);
+            },
+            error: function (e) {
+              console.log("error", e)
+            }
+          })
+        });
+    </script>
+</body>
+</html>
