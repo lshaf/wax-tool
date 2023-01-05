@@ -13,14 +13,17 @@
     <script>
         function renderActions(acts) {
           let e_res = $("#result");
+          let e_final = [];
           let regex = /^X: (?<x>\d+) \| Y: (?<y>\d+) \| LEEF in Tree:(?<pool>[\d\.]+)/;
           for (let a of acts) {
             let m = regex.exec(a.act.data.memo);
             if (m === null) continue;
             let pool = parseInt(m.groups.pool);
             let f_pool = pool.toLocaleString().padStart(12, ' ');
-            e_res.append(`${m.groups.x}:${m.groups.y} # ${f_pool} LEEF\n`)
+            e_final.push(`${m.groups.x}:${m.groups.y} # ${f_pool} LEEF\n`)
           }
+          e_final.sort();
+          e_res.html(e_final.join("\n"))
         }
         $("#fetch").on('click', function () {
           let url = "https://wax.eosrio.io/v2/history/get_transaction";
