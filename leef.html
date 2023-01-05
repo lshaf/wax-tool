@@ -20,7 +20,7 @@
             if (m === null) continue;
             let pool = parseInt(m.groups.pool);
             let f_pool = pool.toLocaleString().padStart(12, ' ');
-            e_final.push(`${m.groups.x}:${m.groups.y} # ${f_pool} LEEF\n`)
+            e_final.push(`${m.groups.x}:${m.groups.y} # ${f_pool} LEEF`)
           }
           e_final.sort();
           e_res.html(e_final.join("\n"))
